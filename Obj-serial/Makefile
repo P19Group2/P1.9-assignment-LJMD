@@ -5,7 +5,7 @@ CFLAGS=-Wall -g -O3 -fomit-frame-pointer
 LDLIBS=-lm
 
 # list of source files
-SRC=ljmd.c force.c velverlet.c read_input.c write_output.c
+SRC=ljmd.c force.c velverlet.c read_input.c write_output.c utilities.c
 VPATH=../src
 OBJ=$(SRC:%.c=%.o)
 
@@ -23,4 +23,4 @@ clean:
 	$(CC) -c $(CFLAGS) $<
 
 # dependencies
-ljmd.o: ljmd.c force.c velverlet.c read_input.c write_output.c
+ljmd.o: ljmd.c force.c velverlet.c read_input.c write_output.c utilities.c
