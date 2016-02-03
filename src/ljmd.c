@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include "force.h"
+
 /* generic file- or pathname buffer length */
 #define BLEN 200
 
@@ -20,15 +22,7 @@ const double mvsq2e=2390.05736153349; /* m*v^2 in kcal/mol */
 
 /* structure to hold the complete information 
  * about the MD system */
-struct _mdsys {
-    int natoms,nfi,nsteps;
-    double dt, mass, epsilon, sigma, box, rcut;
-    double ekin, epot, temp;
-    double *rx, *ry, *rz;
-    double *vx, *vy, *vz;
-    double *fx, *fy, *fz;
-};
-typedef struct _mdsys mdsys_t;
+//typedef struct _mdsys mdsys_t;
 
 /* helper function: read a line and then return
    the first string with whitespace stripped off */
@@ -59,7 +53,8 @@ static int get_a_line(FILE *fp, char *buf)
     return 0;
 }
  
-/* helper function: zero out an array */
+/* 
+// helper function: zero out an array
 static void azzero(double *d, const int n)
 {
     int i;
@@ -67,14 +62,17 @@ static void azzero(double *d, const int n)
         d[i]=0.0;
     }
 }
+*/
 
-/* helper function: apply minimum image convention */
+/*
+// helper function: apply minimum image convention 
 static double pbc(double x, const double boxby2)
 {
     while (x >  boxby2) x -= 2.0*boxby2;
     while (x < -boxby2) x += 2.0*boxby2;
     return x;
 }
+*/
 
 /* compute kinetic energy */
 static void ekin(mdsys_t *sys)
@@ -88,14 +86,15 @@ static void ekin(mdsys_t *sys)
     sys->temp = 2.0*sys->ekin/(3.0*sys->natoms-3.0)/kboltz;
 }
 
-/* compute forces */
+/*
+// compute forces 
 static void force(mdsys_t *sys) 
 {
     double r,ffac;
     double rx,ry,rz;
     int i,j;
 
-    /* zero energy and forces */
+    // zero energy and forces
     sys->epot=0.0;
     azzero(sys->fx,sys->natoms);
     azzero(sys->fy,sys->natoms);
@@ -104,16 +103,16 @@ static void force(mdsys_t *sys)
     for(i=0; i < (sys->natoms); ++i) {
         for(j=0; j < (sys->natoms); ++j) {
 
-            /* particles have no interactions with themselves */
+            // particles have no interactions with themselves
             if (i==j) continue;
             
-            /* get distance between particle i and j */
+            // get distance between particle i and j
             rx=pbc(sys->rx[i] - sys->rx[j], 0.5*sys->box);
             ry=pbc(sys->ry[i] - sys->ry[j], 0.5*sys->box);
             rz=pbc(sys->rz[i] - sys->rz[j], 0.5*sys->box);
             r = sqrt(rx*rx + ry*ry + rz*rz);
       
-            /* compute force and energy if within cutoff */
+            // compute force and energy if within cutoff
             if (r < sys->rcut) {
                 ffac = -4.0*sys->epsilon*(-12.0*pow(sys->sigma/r,12.0)/r
                                          +6*pow(sys->sigma/r,6.0)/r);
@@ -128,6 +127,8 @@ static void force(mdsys_t *sys)
         }
     }
 }
+*/
+
 
 /* velocity verlet */
 static void velverlet(mdsys_t *sys)
