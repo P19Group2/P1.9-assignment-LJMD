@@ -12,4 +12,6 @@ struct _mdsys{
     double *fx, *fy, *fz;
 };
 
+typedef struct _mdsys mdsys_t;
+
 #endif
