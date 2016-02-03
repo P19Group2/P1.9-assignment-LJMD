@@ -13,6 +13,8 @@
 
 #include "force.h"
 #include "velverlet.h"
+#include "read_input.h"
+#include "write_output.h"
 
 /* generic file- or pathname buffer length */
 #define BLEN 200
@@ -25,13 +27,14 @@ const double mvsq2e=2390.05736153349; /* m*v^2 in kcal/mol */
  * about the MD system */
 //typedef struct _mdsys mdsys_t;
 
-/* helper function: read a line and then return
-   the first string with whitespace stripped off */
+/*
+//   helper function: read a line and then return
+//   the first string with whitespace stripped off 
 static int get_a_line(FILE *fp, char *buf)
 {
     char tmp[BLEN], *ptr;
 
-    /* read a line and cut of comments and blanks */
+    // read a line and cut of comments and blanks 
     if (fgets(tmp,BLEN,fp)) {
         int i;
 
@@ -53,7 +56,7 @@ static int get_a_line(FILE *fp, char *buf)
     }
     return 0;
 }
- 
+*/
 /* 
 // helper function: zero out an array
 static void azzero(double *d, const int n)
@@ -158,7 +161,8 @@ static void velverlet(mdsys_t *sys)
 }
 */
 
-/* append data to output. */
+/*
+// append data to output. 
 static void output(mdsys_t *sys, FILE *erg, FILE *traj)
 {
     int i;
@@ -170,6 +174,7 @@ static void output(mdsys_t *sys, FILE *erg, FILE *traj)
         fprintf(traj, "Ar  %20.8f %20.8f %20.8f\n", sys->rx[i], sys->ry[i], sys->rz[i]);
     }
 }
+*/
 
 
 /* main */
