@@ -13,7 +13,7 @@ class mdsys(Structure):
 
 # import DSO
 
-dso = CDLL("../ljmd-serial.so")
+dso = CDLL("../lib/ljmd-serial.so")
 
 arrayType = c_double*2
 
