@@ -45,15 +45,16 @@ void force(mdsys_t *sys)
             /* compute force and energy if within cutoff */
             if (r < sys->rcut) {
 		double rinv = 1/r;
-                ffac = -4.0*sys->epsilon*(-12.0*pow(sys->sigma*rinv,12.0)*rinv
-                                         +6*pow(sys->sigma*rinv,6.0)*rinv);
-                
-                sys->epot += 0.5*4.0*sys->epsilon*(pow(sys->sigma*rinv,12.0)
-                                               -pow(sys->sigma*rinv,6.0));
+                double p12 = 4.0*sys->epsilon*pow(sys->sigma*rinv,12.0);
+		double p6 = 4.0*sys->epsilon*pow(sys->sigma*rinv,6.0);
 
-                sys->fx[i] += rx*rinv*ffac;
-                sys->fy[i] += ry*rinv*ffac;
-                sys->fz[i] += rz*rinv*ffac;
+		ffac = rinv*rinv*(12.0*p12-6*p6);
+                
+                sys->epot += 0.5*(p12-p6);
+
+                sys->fx[i] += rx*ffac;
+                sys->fy[i] += ry*ffac;
+                sys->fz[i] += rz*ffac;
             }
         }
     }
