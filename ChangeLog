@@ -6,3 +6,4 @@ AA moved the computation of a few constants out of the loops and added inlining,
 AA added if condition with flag _OPENMP in order to use the 3rd Newton's law whenever openmp is not used. Took 1.670593 seconds in that case, almost 16x faster than original version.
 MB added naive parallel implementation with OpenMP. Takes longer with more threads than serial version
 MB added atomic operations and benchmarking data for larger problem size
+MB added benchmark plot for OMP 2916 atoms
