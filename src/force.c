@@ -24,12 +24,12 @@ void azzero(double *d, const int n)
 /* compute forces */
 void force(mdsys_t *sys) 
 {
-    double ffac,pot;
+    double pot;
     double b = 0.5*sys->box;
     double s = sys->sigma*sys->sigma;
     double p = s*s*s;
     double csq = sys->rcut*sys->rcut;            
-    int i,j;
+    int i;
     int natoms=sys->natoms;
 
     /* zero energy and forces */
@@ -39,15 +39,15 @@ void force(mdsys_t *sys)
     azzero(sys->fz,natoms);
 
     #pragma omp parallel for default(shared) private(i) reduction(+:pot)
-    for(i=0; i < natoms; ++i) {
+    for(i = 0; i < (natoms - 1); ++i) {
     /* private versions of sys->rx[i] */
+    int j;
     double rxi,ryi,rzi;
     rxi = sys->rx[i];
     ryi = sys->ry[i];
     rzi = sys->rz[i];
-        for(j=0; j < natoms; ++j) {
+        for(j = (1 + i); j < natoms; ++j) {
         double rx,ry,rz,rsq;
-
             /* particles have no interactions with themselves */
             if (i==j) continue;
 
@@ -63,18 +63,28 @@ void force(mdsys_t *sys)
 		double r6 = rsqinv*rsqinv*rsqinv;
 		double pr = p*r6;
 		double p6 = 4.0*sys->epsilon*pr;
-                double p12 = p6*pr;
-
-		ffac = rsqinv*(12*p12-6*p6);
+                double p12 = p6*pr; 
+                double ffac;
+		
+                ffac = rsqinv*(12*p12-6*p6);
                 
                 pot += 0.5*(p12-p6);
-
+                
+                #pragma omp atomic
                 sys->fx[i] += rx*ffac;
+                #pragma omp atomic
                 sys->fy[i] += ry*ffac;
+                #pragma omp atomic
                 sys->fz[i] += rz*ffac;
+                #pragma omp atomic
+                sys->fx[j] -= rx*ffac;
+                #pragma omp atomic
+                sys->fy[j] -= ry*ffac;
+                #pragma omp atomic
+                sys->fz[j] -= rz*ffac;
             }
         }
-    }
+    } 
     sys->epot = pot;
 }
 
