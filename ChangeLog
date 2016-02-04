@@ -4,3 +4,4 @@ AA (almost) removed use of pow() in the loop, and redefined ffac, took 13.426059
 AA removed use of sqrt() in the loop, then removed completely the use of pow() with float exponent, took 3.395514 seconds, almost 8x faster than original version.
 AA moved the computation of a few constants out of the loops and added inlining, performance does not change.
 AA added if condition with flag _OPENMP in order to use the 3rd Newton's law whenever openmp is not used. Took 1.670593 seconds in that case, almost 16x faster than original version.
+MB added naive parallel implementation with OpenMP. Takes longer with more threads than serial version
