@@ -9,13 +9,13 @@ SRC=ljmd.c force.c velverlet.c read_input.c write_output.c utilities.c
 VPATH=../src
 OBJ=$(SRC:%.c=%.o)
 
-default: ../ljmd-serial.x
+default: ./ljmd-serial.x
 
 clean:
 	rm -f  *.o *.x
 
 # linker rule
-../ljmd-serial.x: $(OBJ)
+./ljmd-serial.x: $(OBJ)
 	$(CC) -o $@  $(CFLAGS)  $^ $(LDLIBS)
 
 # compilation pattern rule for objects
