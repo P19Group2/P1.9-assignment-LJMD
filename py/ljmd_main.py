@@ -111,6 +111,7 @@ traj = open(trajectory_f, "w")
 
 print "Starting simulation with "+str(sys.natoms)+" atoms for "+str(sys.nsteps)+" steps."
 print "     NFI            TEMP            EKIN                 EPOT              ETOT"
+write_output(sys, erg, traj)
 
 #**************************************************
 #  main MD loop
