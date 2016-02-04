@@ -20,8 +20,10 @@ void azzero(double *d, const int n)
 /* compute forces */
 void force(mdsys_t *sys) 
 {
-    double r,ffac;
+    double rsq,ffac;
     double rx,ry,rz;
+    double b = 0.5*sys->box;
+    double csq = sys->rcut*sys->rcut;            
     int i,j;
 
     /* zero energy and forces */
@@ -35,20 +37,23 @@ void force(mdsys_t *sys)
 
             /* particles have no interactions with themselves */
             if (i==j) continue;
-            
+
             /* get distance between particle i and j */
-            rx=pbc(sys->rx[i] - sys->rx[j], 0.5*sys->box);
-            ry=pbc(sys->ry[i] - sys->ry[j], 0.5*sys->box);
-            rz=pbc(sys->rz[i] - sys->rz[j], 0.5*sys->box);
-            r = sqrt(rx*rx + ry*ry + rz*rz);
+            rx=pbc(sys->rx[i] - sys->rx[j], b);
+            ry=pbc(sys->ry[i] - sys->ry[j], b);
+            rz=pbc(sys->rz[i] - sys->rz[j], b);
+            rsq = rx*rx + ry*ry + rz*rz;
       
             /* compute force and energy if within cutoff */
-            if (r < sys->rcut) {
-		double rinv = 1/r;
-                double p12 = 4.0*sys->epsilon*pow(sys->sigma*rinv,12.0);
-		double p6 = 4.0*sys->epsilon*pow(sys->sigma*rinv,6.0);
+            if (rsq < csq) {
+		double rsqinv = 1/rsq;
+		double r6 = rsqinv*rsqinv*rsqinv;
+		double s = sys->sigma*sys->sigma;
+		double p = s*s*s*r6;
+		double p6 = 4.0*sys->epsilon*p;
+                double p12 = p6*p;
 
-		ffac = rinv*rinv*(12.0*p12-6*p6);
+		ffac = rsqinv*(12*p12-6*p6);
                 
                 sys->epot += 0.5*(p12-p6);
 
