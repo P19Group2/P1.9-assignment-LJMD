@@ -1,1 +1,2 @@
-AA added seconds() function to take timing of the force function
+AA added seconds() function to take timing of the force function. Took 26.583683 seconds with 108 atoms, almost 100% of the time taken by the whole program.
+AA (almost) removed division in the loop, took 22.009221 seconds. Use of perf record suggests that pow is a bottleneck.
