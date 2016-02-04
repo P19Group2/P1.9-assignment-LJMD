@@ -1,4 +1,5 @@
 #include "force.h"
+#include <omp.h>
 
 /* helper function: apply minimum image convention */
 __attribute__((always_inline))
@@ -23,8 +24,7 @@ void azzero(double *d, const int n)
 /* compute forces */
 void force(mdsys_t *sys) 
 {
-    double rsq,ffac;
-    double rx,ry,rz;
+    double ffac,pot;
     double b = 0.5*sys->box;
     double s = sys->sigma*sys->sigma;
     double p = s*s*s;
@@ -33,21 +33,28 @@ void force(mdsys_t *sys)
     int natoms=sys->natoms;
 
     /* zero energy and forces */
-    sys->epot=0.0;
+    pot=0.0;
     azzero(sys->fx,natoms);
     azzero(sys->fy,natoms);
     azzero(sys->fz,natoms);
 
+    #pragma omp parallel for default(shared) private(i) reduction(+:pot)
     for(i=0; i < natoms; ++i) {
+    /* private versions of sys->rx[i] */
+    double rxi,ryi,rzi;
+    rxi = sys->rx[i];
+    ryi = sys->ry[i];
+    rzi = sys->rz[i];
         for(j=0; j < natoms; ++j) {
+        double rx,ry,rz,rsq;
 
             /* particles have no interactions with themselves */
             if (i==j) continue;
 
             /* get distance between particle i and j */
-            rx=pbc(sys->rx[i] - sys->rx[j], b);
-            ry=pbc(sys->ry[i] - sys->ry[j], b);
-            rz=pbc(sys->rz[i] - sys->rz[j], b);
+            rx=pbc(rxi - sys->rx[j], b);
+            ry=pbc(ryi - sys->ry[j], b);
+            rz=pbc(rzi - sys->rz[j], b);
             rsq = rx*rx + ry*ry + rz*rz;
       
             /* compute force and energy if within cutoff */
@@ -60,7 +67,7 @@ void force(mdsys_t *sys)
 
 		ffac = rsqinv*(12*p12-6*p6);
                 
-                sys->epot += 0.5*(p12-p6);
+                pot += 0.5*(p12-p6);
 
                 sys->fx[i] += rx*ffac;
                 sys->fy[i] += ry*ffac;
@@ -68,6 +75,7 @@ void force(mdsys_t *sys)
             }
         }
     }
+    sys->epot = pot;
 }
 
 #else
