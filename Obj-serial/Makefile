@@ -1,7 +1,8 @@
 # -*- Makefile -*-
 SHELL=/bin/sh
 CC=gcc
-CFLAGS=-Wall -g -O3 -fomit-frame-pointer
+CFLAGS=-Wall -fPIC  -g -O3 -fomit-frame-pointer -fno-fast-math
+LDFLAGS=-shared
 LDLIBS=-lm
 
 # list of source files
@@ -9,14 +10,14 @@ SRC=ljmd.c force.c velverlet.c read_input.c write_output.c utilities.c
 VPATH=../src
 OBJ=$(SRC:%.c=%.o)
 
-default: ../ljmd-serial.x
+default: ../ljmd-serial.so
 
 clean:
-	rm -f *.mod *.o ../ljmd-serial.x
+	rm -f *.mod *.o ../ljmd-serial.so
 
 # linker rule
-../ljmd-serial.x: $(OBJ)
-	$(CC) -o $@ $(CFLAGS) $^ $(LDLIBS)
+../ljmd-serial.so: $(OBJ)
+	$(CC) -o $@  $(CFLAGS) $(LDFLAGS) $^ $(LDLIBS)
 
 # compilation pattern rule for objects
 %.o: %.c
