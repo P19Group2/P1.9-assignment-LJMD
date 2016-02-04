@@ -1,3 +1,4 @@
 AA added seconds() function to take timing of the force function. Took 26.583683 seconds with 108 atoms, almost 100% of the time taken by the whole program.
 AA (almost) removed division in the loop, took 22.009221 seconds. Use of perf record suggests that pow is a bottleneck.
 AA (almost) removed use of pow() in the loop, and redefined ffac, took 13.426059 seconds, almost 2x faster.
+AA removed use of sqrt() in the loop, then removed completely the use of pow() with float exponent, took 3.395514 seconds, almost 8x faster than original version.
