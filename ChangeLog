@@ -8,3 +8,4 @@ MB added naive parallel implementation with OpenMP. Takes longer with more threa
 MB added atomic operations and benchmarking data for larger problem size
 MB added benchmark plot for OMP 2916 atoms
 AA fixed problem with inlining of azzero() and pbc() functions, dynamic library for the python wrapper can now be created
+AA-MB started working on the cuda force kernel but did not manage to finish
