@@ -7,3 +7,4 @@ AA added if condition with flag _OPENMP in order to use the 3rd Newton's law whe
 MB added naive parallel implementation with OpenMP. Takes longer with more threads than serial version
 MB added atomic operations and benchmarking data for larger problem size
 MB added benchmark plot for OMP 2916 atoms
+AA fixed problem with inlining of azzero() and pbc() functions, dynamic library for the python wrapper can now be created
