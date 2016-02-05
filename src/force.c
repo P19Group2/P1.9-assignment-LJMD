@@ -1,5 +1,7 @@
 #include "force.h"
+#ifdef _OPENMP
 #include <omp.h>
+#endif
 
 /* helper function: apply minimum image convention */
 __attribute__((always_inline))
