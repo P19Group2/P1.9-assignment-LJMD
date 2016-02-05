@@ -3,7 +3,7 @@
 import os.path
 import sys
 from ctypes import *
-from read_input import read_input
+from read_write import read_input, write_output
 
 
 BLEN = 200
@@ -111,23 +111,19 @@ traj = open(trajectory_f, "w")
 
 print "Starting simulation with "+str(sys.natoms)+" atoms for "+str(sys.nsteps)+" steps."
 print "     NFI            TEMP            EKIN                 EPOT              ETOT"
-
-
-#dso.output(byref(sys), erg, traj)
+write_output(sys, erg, traj)
 
 #**************************************************
 #  main MD loop
 #print range(0, sys.nsteps+1)
-for i in range(0, sys.nsteps+1):
+for sys.nfi in range(0, sys.nsteps+1):
 	
-	if not i%output_print_freq:
-		#dso.output(byref(sys), str(erg), str(traj))
-
+	if not sys.nfi%output_print_freq:
+		write_output(sys, erg, traj)
 	dso.velverlet_1(byref(sys))
 	dso.force(byref(sys))
 	dso.velverlet_2(byref(sys))
 	dso.ekin(byref(sys))
-
 
 print "Simulation Done."
 #**************************************************
