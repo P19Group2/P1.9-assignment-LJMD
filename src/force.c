@@ -1,9 +1,10 @@
 #include "force.h"
+#ifdef _OPENMP
 #include <omp.h>
+#endif
 
 /* helper function: apply minimum image convention */
-__attribute__((always_inline))
-double pbc(double x, const double boxby2)
+inline double pbc(double x, const double boxby2)
 {
     while (x >  boxby2) x -= 2.0*boxby2;
     while (x < -boxby2) x += 2.0*boxby2;
@@ -11,8 +12,7 @@ double pbc(double x, const double boxby2)
 }
 
 // helper function: zero out an array
-__attribute__((always_inline))
-void azzero(double *d, const int n)
+inline void azzero(double *d, const int n)
 {
     int i;
     for (i=0; i<n; ++i) {
