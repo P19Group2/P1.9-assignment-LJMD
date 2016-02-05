@@ -1,7 +1,7 @@
-# -*- Makefile -*-
+# -*- Makefile -*-i
 SHELL=/bin/sh
 CC=gcc
-CDFLAGS=-Wall -fPIC  -g -O3 -fomit-frame-pointer -fno-fast-math
+CDFLAGS=-Wall -fPIC  -g -O3 -fomit-frame-pointer -fno-fast-math -fopenmp -D_OPENMP
 LDFLAGS=-shared
 LDLIBS=-lm
 
